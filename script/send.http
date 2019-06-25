@@ -1,0 +1,106 @@
+################################################################
+######
+######    base section
+######
+################################################################
+
+### index
+GET http://127.0.0.1:9578 HTTP/1.1
+Content-Type: application/json
+
+{
+}
+
+### health
+GET http://127.0.0.1:9578/health HTTP/1.1
+Content-Type: application/json
+
+{
+}
+
+################################################################
+######
+######    palletone section
+######
+################################################################
+
+### tx/raw 
+POST http://127.0.0.1:9578/tx/raw HTTP/1.1
+Content-Type: application/json
+
+{
+    "sendAddr": "P1GGRyzx38osMCbuqBALq57E5W4kpejnEKE", 
+    "recvAddr": "P1Pn45yitddV7qL9EXhPKCkiqkqDjj2mEEn", 
+    "amount": "5.0", 
+    "fee": "1.0", 
+    "utxo": [
+        {
+            "txid": "0x732e64edf2571c91b6ed4062e6edef56e816eb9f3c381c3b1a595ca54a73efa2", 
+            "message_index": 0, 
+            "out_index": 1, 
+            "amount": 499996000000000, 
+            "asset": "PTN", 
+            "pk_script_hex": "0x76a914e8b1451671d17942185455dfd3d56ee15ef7601088ac", 
+            "pk_script_string": "OP_DUP OP_HASH160 e8b1451671d17942185455dfd3d56ee15ef76010 OP_EQUALVERIFY OP_CHECKSIG", 
+            "create_time": "2019-06-12T11:21:39+08:00", 
+            "lock_time": 0, 
+            "flag_status": "normal", 
+            "coin_days": 2499980000000000, 
+            "amount_with_interest": 500064492602739
+        }
+    ]
+}
+
+### tx/encoding
+POST http://127.0.0.1:9578/tx/encoding HTTP/1.1
+Content-Type: application/json
+
+{
+    "sendAddr": "P1GGRyzx38osMCbuqBALq57E5W4kpejnEKE", 
+    "recvAddr": "P1Pn45yitddV7qL9EXhPKCkiqkqDjj2mEEn", 
+    "amount": "5.0", 
+    "fee": "1.0", 
+    "utxo": [
+        {
+            "txid": "0x732e64edf2571c91b6ed4062e6edef56e816eb9f3c381c3b1a595ca54a73efa2", 
+            "message_index": 0, 
+            "out_index": 1, 
+            "amount": 499996000000000, 
+            "asset": "PTN", 
+            "pk_script_hex": "0x76a914e8b1451671d17942185455dfd3d56ee15ef7601088ac", 
+            "pk_script_string": "OP_DUP OP_HASH160 e8b1451671d17942185455dfd3d56ee15ef76010 OP_EQUALVERIFY OP_CHECKSIG", 
+            "create_time": "2019-06-12T11:21:39+08:00", 
+            "lock_time": 0, 
+            "flag_status": "normal", 
+            "coin_days": 2499980000000000, 
+            "amount_with_interest": 500064492602739
+        }
+    ]
+}
+
+### gettxhash
+POST http://127.0.0.1:9578/gettxhash HTTP/1.1
+Content-Type: application/json
+
+{
+    "sendAddr": "P1GGRyzx38osMCbuqBALq57E5W4kpejnEKE", 
+    "recvAddr": "P1Pn45yitddV7qL9EXhPKCkiqkqDjj2mEEn", 
+    "amount": "5.0", 
+    "fee": "1.0", 
+    "utxo": [
+        {
+            "txid": "0x732e64edf2571c91b6ed4062e6edef56e816eb9f3c381c3b1a595ca54a73efa2", 
+            "message_index": 0, 
+            "out_index": 1, 
+            "amount": 499996000000000, 
+            "asset": "PTN", 
+            "pk_script_hex": "0x76a914e8b1451671d17942185455dfd3d56ee15ef7601088ac", 
+            "pk_script_string": "OP_DUP OP_HASH160 e8b1451671d17942185455dfd3d56ee15ef76010 OP_EQUALVERIFY OP_CHECKSIG", 
+            "create_time": "2019-06-12T11:21:39+08:00", 
+            "lock_time": 0, 
+            "flag_status": "normal", 
+            "coin_days": 2499980000000000, 
+            "amount_with_interest": 500064492602739
+        }
+    ]
+}
