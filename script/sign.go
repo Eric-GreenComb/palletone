@@ -1,19 +1,25 @@
+package script
 
-签名函数
+// 签名函数
 
-tokenengine.CalcSignatureHash(mtx, tokenengine.SigHashAll, int(_utxo.MessageIndex), int(_utxo.OutIndex), nil)
+// tokenengine.CalcSignatureHash(mtx, tokenengine.SigHashAll, int(_utxo.MessageIndex), int(_utxo.OutIndex), nil)
 
 //为钱包计算要签名某个Input对应的Hash
+/*
 func CalcSignatureHash(tx *modules.Transaction, hashType uint32, msgIdx, inputIdx int, lockOrRedeemScript []byte) ([]byte, error) {
 	acc := &account{}
 	return txscript.CalcSignatureHash(lockOrRedeemScript, txscript.SigHashType(hashType), tx, msgIdx, inputIdx, acc)
 }
+*/
 
-此处为txscript.CalcSignatureHash函数
+// 此处为txscript.CalcSignatureHash函数
 
 // calcSignatureHash will, given a script and hash type for the current script
 // engine instance, calculate the signature hash to be used for signing and
 // verification.
+
+/*
+
 func calcSignatureHash(script []parsedOpcode, hashType SigHashType, tx *modules.Transaction, msgIdx, idx int, crypto ICrypto) []byte {
 	pay := tx.TxMessages[msgIdx].Payload.(*modules.PaymentPayload)
 	// The SigHashSingle signature type signs only the corresponding input
@@ -58,7 +64,7 @@ func calcSignatureHash(script []parsedOpcode, hashType SigHashType, tx *modules.
 
 	for mIdx, mCopy := range txCopy.TxMessages {
 
-====只处理APP_PAYMENT，其他保持原值，并且SignatureScript=nil
+		// ====只处理APP_PAYMENT，其他保持原值，并且SignatureScript=nil
 
 		if mCopy.App == modules.APP_PAYMENT {
 			pay := txCopy.TxMessages[mIdx].Payload.(*modules.PaymentPayload)
@@ -79,7 +85,7 @@ func calcSignatureHash(script []parsedOpcode, hashType SigHashType, tx *modules.
 		}
 	}
 
-====签名类型为SigHashAll，不处理
+	// ====签名类型为SigHashAll，不处理
 
 	switch hashType & sigHashMask {
 	case SigHashNone:
@@ -129,10 +135,9 @@ func calcSignatureHash(script []parsedOpcode, hashType SigHashType, tx *modules.
 	//binary.Write(&wbuf, binary.LittleEndian, hashType)
 	//return wire.DoubleSha256(wbuf.Bytes())
 
-
-====此部分有效
-====rlp为以太的rlp编码规则
-====Hash为crypto.Keccak256(msg)
+	// ====此部分有效
+	// ====rlp为以太的rlp编码规则
+	// ====Hash为crypto.Keccak256(msg)
 
 	data, err := rlp.EncodeToBytes(&txCopy)
 	if err != nil {
@@ -141,7 +146,5 @@ func calcSignatureHash(script []parsedOpcode, hashType SigHashType, tx *modules.
 	hash, _ := crypto.Hash(data)
 	return hash
 
-
-
-
 }
+*/
