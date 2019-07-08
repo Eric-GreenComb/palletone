@@ -61,10 +61,11 @@ func FindMin(utxos []TxUtxo) TxUtxo {
 
 // TxReturn TxReturn
 type TxReturn struct {
-	Status   string   `json:"status"`   // status true false
-	Message  string   `json:"message"`  // 如有失败原因，请写失败原因，成功请空着
-	Tx       string   `json:"tx"`       // 待签名的tx字符串”//这个是标准的rlp编码后的字符串，跟例子上的数据一致
-	HashList []TxHash `json:"hashlist"` // 待签名数据列表，按照input的顺序排列
+	Status          string   `json:"status"`           // status true false
+	Message         string   `json:"message"`          // 如有失败原因，请写失败原因，成功请空着
+	SignatureScript string   `json:"signature_script"` // from地址的 signature_script
+	Tx              string   `json:"tx"`               // 待签名的tx字符串”//这个是标准的rlp编码后的字符串，跟例子上的数据一致
+	HashList        []TxHash `json:"hashlist"`         // 待签名数据列表，按照input的顺序排列
 }
 
 // TxHash TxHash

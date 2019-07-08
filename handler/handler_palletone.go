@@ -5,6 +5,7 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"github.com/palletone/go-palletone/common"
 
 	"github.com/Eric-GreenComb/palletone/bean"
 )
@@ -163,7 +164,13 @@ func GetTxHash(c *gin.Context) {
 		return
 	}
 
-	_tx, _hashList := GenSignHash(_mtx, _taken)
+	_addr, err := common.StringToAddress(_params.SendAddr)
+	if err != nil {
+		c.JSON(http.StatusOK, _ret)
+		return
+	}
+
+	_signatureScript, _tx, _hashList := GenSignHash(_addr, _mtx, _taken)
 	if err != nil {
 		_ret.Message = err.Error()
 		c.JSON(http.StatusOK, _ret)
@@ -171,6 +178,7 @@ func GetTxHash(c *gin.Context) {
 	}
 
 	_ret.Status = "true"
+	_ret.SignatureScript = _signatureScript
 	_ret.Tx = _tx
 	_ret.HashList = _hashList
 

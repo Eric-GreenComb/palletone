@@ -2,6 +2,7 @@ package handler
 
 import (
 	"bytes"
+	"encoding/base64"
 	"encoding/hex"
 	"encoding/json"
 	"errors"
@@ -78,14 +79,17 @@ func GenRawTransactionEx(utxos bean.Utxos, from, to string, pay, amount uint64) 
 }
 
 // GenSignHash GenSignHash
-func GenSignHash(mtx *modules.Transaction, takenUtxo bean.Utxos) (string, []bean.TxHash) {
+func GenSignHash(from common.Address, mtx *modules.Transaction, takenUtxo bean.Utxos) (string, string, []bean.TxHash) {
 
 	var _hashList []bean.TxHash
 	var _hash bean.TxHash
 	var _buffer bytes.Buffer
 
+	var _ppscript []byte
+	_ppscript = tokenengine.GenerateLockScript(from)
+
 	for _, _utxo := range takenUtxo {
-		hashforsign, err := tokenengine.CalcSignatureHash(mtx, tokenengine.SigHashAll, int(_utxo.MessageIndex), int(_utxo.OutIndex), nil)
+		hashforsign, err := tokenengine.CalcSignatureHash(mtx, tokenengine.SigHashAll, int(_utxo.MessageIndex), int(_utxo.OutIndex), _ppscript)
 		if err != nil {
 			continue
 		}
@@ -93,13 +97,17 @@ func GenSignHash(mtx *modules.Transaction, takenUtxo bean.Utxos) (string, []bean
 		_buffer.WriteString(",")
 
 		_hash.Hash = "0x" + hex.EncodeToString(hashforsign)
+
+		// _encodeString := base64.StdEncoding.EncodeToString(hashforsign)
+		// _hash.Hash = _encodeString
+
 		_hashList = append(_hashList, _hash)
 	}
 
 	_buf := make([]byte, _buffer.Len()-1)
 	_buffer.Read(_buf)
 
-	return string(_buf), _hashList
+	return base64.StdEncoding.EncodeToString(_ppscript), string(_buf), _hashList
 }
 
 // GenMessageByUxto GenMessageByUxto
@@ -118,6 +126,7 @@ func GenMessageByUxto(utxos bean.Utxos, from, to string, amount, change uint64) 
 		prevOut := modules.NewOutPoint(txHash, _utxo.MessageIndex, _utxo.OutIndex)
 		txInput := modules.NewTxIn(prevOut, []byte{})
 		pload.AddTxIn(txInput)
+
 	}
 
 	// 构造 payload output，默认PTNCOIN
