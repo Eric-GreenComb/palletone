@@ -30,6 +30,7 @@ func GenRawTransaction(utxos bean.Utxos, from, to string, pay, amount uint64) (*
 	if err != nil {
 		return nil, err
 	}
+
 	return _mtx, nil
 }
 
@@ -118,13 +119,21 @@ func GenMessageByUxto(utxos bean.Utxos, from, to string, amount, change uint64) 
 
 	pload.LockTime = 0
 
+	_from, err := common.StringToAddress(from)
+	if err != nil {
+		return nil, err
+	}
+
+	var _ppscript []byte
+	_ppscript = tokenengine.GenerateLockScript(_from)
+
 	// 构造Input,Output
 	for _, _utxo := range utxos {
 
 		// 构造 payload input
 		txHash := common.HexToHash(_utxo.TxID)
 		prevOut := modules.NewOutPoint(txHash, _utxo.MessageIndex, _utxo.OutIndex)
-		txInput := modules.NewTxIn(prevOut, []byte{})
+		txInput := modules.NewTxIn(prevOut, _ppscript)
 		pload.AddTxIn(txInput)
 
 	}
