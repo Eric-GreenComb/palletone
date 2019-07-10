@@ -13,10 +13,10 @@ func SetupPalletoneRouter(g *gin.Engine) {
 		rpalletone.POST("tx/raw", handler.GetRawTx)
 
 		// 根据参数，生成交易结构，并进行rlp编码
-		rpalletone.POST("tx/encoding", handler.GetRawTxEncoding)
+		// rpalletone.POST("tx/encoding", handler.GetRawTxEncoding)
 
 		// 对参数进行rlp解码
-		rpalletone.POST("tx/decoding", handler.GetRawTxDecoding)
+		// rpalletone.POST("tx/decoding", handler.GetRawTxDecoding)
 
 		rpalletone.POST("gettxhash", handler.GetTxHash)
 	}
