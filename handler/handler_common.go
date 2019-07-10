@@ -64,23 +64,23 @@ func GenMtxRlpHex(mtx *modules.Transaction) (string, error) {
 }
 
 // GenRawTransactionEx 创建RawTransaction
-func GenRawTransactionEx(utxos bean.Utxos, from, to string, pay, amount uint64) (*modules.Transaction, bean.Utxos, error) {
+func GenRawTransactionEx(utxos bean.Utxos, from, to string, pay, amount uint64) (*modules.Transaction, error) {
 
 	// 根据支付金额，获取花费的utxo数组和找零
 	_takenUtxo, _change, err := SelectUtxoGreedy(utxos, pay)
 	if err != nil {
-		return nil, nil, err
+		return nil, err
 	}
 
 	_mtx, err := GenMessageByUxto(_takenUtxo, from, to, amount, _change)
 	if err != nil {
-		return nil, nil, err
+		return nil, err
 	}
-	return _mtx, _takenUtxo, nil
+	return _mtx, nil
 }
 
 // GenSignHash GenSignHash
-func GenSignHash(from common.Address, mtx *modules.Transaction, takenUtxo bean.Utxos) (string, string, []bean.TxHash) {
+func GenSignHash(from common.Address, mtx *modules.Transaction) (string, string, []bean.TxHash) {
 
 	var _hashList []bean.TxHash
 	var _hash bean.TxHash
@@ -89,20 +89,32 @@ func GenSignHash(from common.Address, mtx *modules.Transaction, takenUtxo bean.U
 	var _ppscript []byte
 	_ppscript = tokenengine.GenerateLockScript(from)
 
-	for _, _utxo := range takenUtxo {
-		hashforsign, err := tokenengine.CalcSignatureHash(mtx, tokenengine.SigHashAll, int(_utxo.MessageIndex), int(_utxo.OutIndex), _ppscript)
-		if err != nil {
+	// var _ppscript []byte
+	// _ppscript, err := base64.StdEncoding.DecodeString("tmZvA5sAu5B2mCRIBfF4Pc59gEjO8PH6SRjMX59xncU=")
+	// if err != nil {
+	// 	fmt.Println("base64 decoding error", err.Error())
+	// }
+
+	_mtxtmp := mtx
+	for _msgindex, _msg := range _mtxtmp.TxMessages {
+		_payload, _ok := _msg.Payload.(*modules.PaymentPayload)
+		if !_ok {
 			continue
 		}
-		_buffer.WriteString(_utxo.TxID)
-		_buffer.WriteString(",")
+		for _inputindex, _input := range _payload.Inputs {
+			hashforsign, err := tokenengine.CalcSignatureHash(_mtxtmp, tokenengine.SigHashAll, _msgindex, _inputindex, _ppscript)
+			if err != nil {
+				fmt.Println("sign error", err.Error())
+				continue
+			}
 
-		_hash.Hash = "0x" + hex.EncodeToString(hashforsign)
+			_buffer.WriteString(_input.PreviousOutPoint.TxHash.String())
+			_buffer.WriteString(",")
 
-		// _encodeString := base64.StdEncoding.EncodeToString(hashforsign)
-		// _hash.Hash = _encodeString
+			_hash.Hash = "0x" + hex.EncodeToString(hashforsign)
 
-		_hashList = append(_hashList, _hash)
+			_hashList = append(_hashList, _hash)
+		}
 	}
 
 	_buf := make([]byte, _buffer.Len()-1)
@@ -125,6 +137,10 @@ func GenMessageByUxto(utxos bean.Utxos, from, to string, amount, change uint64) 
 	}
 
 	var _ppscript []byte
+	// _ppscript, err := base64.StdEncoding.DecodeString("tmZvA5sAu5B2mCRIBfF4Pc59gEjO8PH6SRjMX59xncU=")
+	// if err != nil {
+	// 	fmt.Println("base64 decoding error", err.Error())
+	// }
 	_ppscript = tokenengine.GenerateLockScript(_from)
 
 	// 构造Input,Output

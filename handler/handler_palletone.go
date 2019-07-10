@@ -1,11 +1,15 @@
 package handler
 
 import (
+	"encoding/hex"
+	"fmt"
 	"net/http"
 	"strconv"
 
+	"github.com/ethereum/go-ethereum/rlp"
 	"github.com/gin-gonic/gin"
 	"github.com/palletone/go-palletone/common"
+	"github.com/palletone/go-palletone/dag/modules"
 
 	"github.com/Eric-GreenComb/palletone/bean"
 )
@@ -157,7 +161,7 @@ func GetTxHash(c *gin.Context) {
 		return
 	}
 
-	_mtx, _taken, err := GenRawTransactionEx(_params.Utxos, _params.SendAddr, _params.RecvAddr, uint64(_pay), uint64(_amount))
+	_mtx, err := GenRawTransactionEx(_params.Utxos, _params.SendAddr, _params.RecvAddr, uint64(_pay), uint64(_amount))
 	if err != nil {
 		_ret.Message = err.Error()
 		c.JSON(http.StatusOK, _ret)
@@ -170,7 +174,7 @@ func GetTxHash(c *gin.Context) {
 		return
 	}
 
-	_signatureScript, _tx, _hashList := GenSignHash(_addr, _mtx, _taken)
+	_signatureScript, _tx, _hashList := GenSignHash(_addr, _mtx)
 	if err != nil {
 		_ret.Message = err.Error()
 		c.JSON(http.StatusOK, _ret)
@@ -183,4 +187,26 @@ func GetTxHash(c *gin.Context) {
 	_ret.HashList = _hashList
 
 	c.JSON(http.StatusOK, _ret)
+}
+
+// GetRawTxDecoding GetRawTxDecoding
+func GetRawTxDecoding(c *gin.Context) {
+
+	var _params bean.TxParams
+
+	c.BindJSON(&_params)
+
+	newTx := &modules.Transaction{}
+
+	_bytes, err := hex.DecodeString(_params.Rlp)
+	if err != nil {
+		fmt.Println("hex decoding error:", err.Error())
+	}
+
+	err = rlp.DecodeBytes(_bytes, newTx)
+	if err != nil {
+		fmt.Println("rlp decoding error:", err.Error())
+	}
+
+	c.JSON(http.StatusOK, newTx)
 }

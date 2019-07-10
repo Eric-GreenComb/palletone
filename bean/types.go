@@ -15,6 +15,7 @@ type TxParams struct {
 	Amount   string `form:"amount" json:"amount"`     //
 	Fee      string `form:"fee" json:"fee"`           //
 	Utxos    Utxos  `form:"utxo" json:"utxo"`         //
+	Rlp      string `form:"rlp" json:"rlp"`           //
 }
 
 // TxUtxo TxUtxo
