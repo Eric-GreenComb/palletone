@@ -24,37 +24,26 @@ func GetRawTx(c *gin.Context) {
 	var _ret bean.TxReturn
 	_ret.Status = "false"
 
-	_amountTx, err := strconv.ParseFloat(_params.Amount, 64)
-	if err != nil {
-		_ret.Message = err.Error()
-		c.JSON(http.StatusOK, _ret)
-		return
-	}
-
-	_fee, err := strconv.ParseFloat(_params.Fee, 64)
-	if err != nil {
-		_ret.Message = err.Error()
-		c.JSON(http.StatusOK, _ret)
-		return
-	}
-
 	// 付给to的金额
-	_amount := int64(_amountTx * 100000000)
-	if _amount <= 0 {
-		_ret.Message = "付款金额小于零"
+	_amountTx, err := strconv.ParseUint(_params.Amount, 10, 64)
+	if err != nil {
+		_ret.Message = err.Error()
+		c.JSON(http.StatusOK, _ret)
+		return
+	}
+
+	// 交易费
+	_fee, err := strconv.ParseUint(_params.Fee, 10, 64)
+	if err != nil {
+		_ret.Message = err.Error()
 		c.JSON(http.StatusOK, _ret)
 		return
 	}
 
 	// from需要支付的金额，包括to的金额+交易费
-	_pay := int64((_amountTx + _fee) * 100000000)
-	if _pay <= 0 {
-		_ret.Message = "支付金额小于零"
-		c.JSON(http.StatusOK, _ret)
-		return
-	}
+	_pay := _amountTx + _fee
 
-	_mtx, err := GenRawTransaction(_params.Utxos, _params.SendAddr, _params.RecvAddr, uint64(_pay), uint64(_amount))
+	_mtx, err := GenRawTransaction(_params.Utxos, _params.SendAddr, _params.RecvAddr, _pay, _amountTx)
 	if err != nil {
 		_ret.Message = err.Error()
 		c.JSON(http.StatusOK, _ret)
@@ -74,37 +63,26 @@ func GetRawTxEncoding(c *gin.Context) {
 	var _ret bean.TxReturn
 	_ret.Status = "false"
 
-	_amountTx, err := strconv.ParseFloat(_params.Amount, 64)
-	if err != nil {
-		_ret.Message = err.Error()
-		c.JSON(http.StatusOK, _ret)
-		return
-	}
-
-	_fee, err := strconv.ParseFloat(_params.Fee, 64)
-	if err != nil {
-		_ret.Message = err.Error()
-		c.JSON(http.StatusOK, _ret)
-		return
-	}
-
 	// 付给to的金额
-	_amount := int64(_amountTx * 100000000)
-	if _amount <= 0 {
-		_ret.Message = "付款金额小于零"
+	_amountTx, err := strconv.ParseUint(_params.Amount, 10, 64)
+	if err != nil {
+		_ret.Message = err.Error()
+		c.JSON(http.StatusOK, _ret)
+		return
+	}
+
+	// 交易费
+	_fee, err := strconv.ParseUint(_params.Fee, 10, 64)
+	if err != nil {
+		_ret.Message = err.Error()
 		c.JSON(http.StatusOK, _ret)
 		return
 	}
 
 	// from需要支付的金额，包括to的金额+交易费
-	_pay := int64((_amountTx + _fee) * 100000000)
-	if _pay <= 0 {
-		_ret.Message = "支付金额小于零"
-		c.JSON(http.StatusOK, _ret)
-		return
-	}
+	_pay := _amountTx + _fee
 
-	_mtx, err := GenRawTransaction(_params.Utxos, _params.SendAddr, _params.RecvAddr, uint64(_pay), uint64(_amount))
+	_mtx, err := GenRawTransaction(_params.Utxos, _params.SendAddr, _params.RecvAddr, _pay, _amountTx)
 	if err != nil {
 		_ret.Message = err.Error()
 		c.JSON(http.StatusOK, _ret)
@@ -131,37 +109,26 @@ func GetTxHash(c *gin.Context) {
 	var _ret bean.TxReturn
 	_ret.Status = "false"
 
-	_amountTx, err := strconv.ParseFloat(_params.Amount, 64)
-	if err != nil {
-		_ret.Message = err.Error()
-		c.JSON(http.StatusOK, _ret)
-		return
-	}
-
-	_fee, err := strconv.ParseFloat(_params.Fee, 64)
-	if err != nil {
-		_ret.Message = err.Error()
-		c.JSON(http.StatusOK, _ret)
-		return
-	}
-
 	// 付给to的金额
-	_amount := int64(_amountTx * 100000000)
-	if _amount <= 0 {
-		_ret.Message = "付款金额小于零"
+	_amountTx, err := strconv.ParseUint(_params.Amount, 10, 64)
+	if err != nil {
+		_ret.Message = err.Error()
+		c.JSON(http.StatusOK, _ret)
+		return
+	}
+
+	// 交易费
+	_fee, err := strconv.ParseUint(_params.Fee, 10, 64)
+	if err != nil {
+		_ret.Message = err.Error()
 		c.JSON(http.StatusOK, _ret)
 		return
 	}
 
 	// from需要支付的金额，包括to的金额+交易费
-	_pay := int64((_amountTx + _fee) * 100000000)
-	if _pay <= 0 {
-		_ret.Message = "支付金额小于零"
-		c.JSON(http.StatusOK, _ret)
-		return
-	}
+	_pay := _amountTx + _fee
 
-	_mtx, err := GenRawTransactionEx(_params.Utxos, _params.SendAddr, _params.RecvAddr, uint64(_pay), uint64(_amount))
+	_mtx, err := GenRawTransactionEx(_params.Utxos, _params.SendAddr, _params.RecvAddr, _pay, _amountTx)
 	if err != nil {
 		_ret.Message = err.Error()
 		c.JSON(http.StatusOK, _ret)

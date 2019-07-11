@@ -240,6 +240,7 @@ func SelectUtxoGreedy(utxos bean.Utxos, amount uint64) (bean.Utxos, uint64, erro
 	}
 
 	// 如果不够支付，则返回错误
+	fmt.Println(accum, amount)
 	if accum < amount && len(greaters) == 0 {
 		return nil, 0, errors.New("Amount Not Enough to pay")
 	}
